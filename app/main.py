@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.skills import router as skills_router
 
 from app.api import auth
 from app.core.config import settings
@@ -11,6 +12,7 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         openapi_url="/openapi.json",
         redoc_url=None,
+        debug=True
     )
     app.add_middleware(
         CORSMiddleware,
@@ -21,6 +23,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(auth.router, prefix="/auth", tags=["auth"])
+    app.include_router(skills_router)
     return app
 
 app = create_app()

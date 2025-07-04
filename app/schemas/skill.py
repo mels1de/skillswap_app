@@ -3,9 +3,10 @@ from typing import Optional
 
 class SkillBase(BaseModel):
     name: str
+    description: Optional[str] = None
 
-class SkillCreate(BaseModel):
-    user_Id: int
+class SkillCreate(SkillBase):
+    user_id: int
 
 class SkillOut(SkillBase):
     id: int

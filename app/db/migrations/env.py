@@ -1,6 +1,6 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
+from sqlalchemy import engine_from_config,create_engine
 from sqlalchemy import pool
 
 from alembic import context
@@ -25,6 +25,10 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+
+import app.models.user
+import app.models.skill
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -64,17 +68,20 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+    async_url = str(settings.database_url)
+    sync_url = async_url.replace("+asyncpg","+psycopg2")
+    connectable = create_engine(
+        sync_url,
         poolclass=pool.NullPool,
+        connect_args = {"client_encoding": "utf8"},
     )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=Base.metadata,
+            compare_type=True,
         )
-
         with context.begin_transaction():
             context.run_migrations()
 
