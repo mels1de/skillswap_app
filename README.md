@@ -1,7 +1,5 @@
 # SkillSwap API
 
-![CI](https://github.com/your-username/skill-swap-api/actions/workflows/ci.yml/badge.svg) ![Docker](https://github.com/your-username/skill-swap-api/actions/workflows/docker.yml/badge.svg)
-
 ## Table of Contents
 
 * [Project Overview](#project-overview)
