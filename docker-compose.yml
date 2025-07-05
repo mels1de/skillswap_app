@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_db_password
+      POSTGRES_DB: skill_swap_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:your_db_password@db/skill_swap_db
+      SECRET_KEY: yoursecretkey
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+volumes:
+  db_data:

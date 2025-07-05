@@ -1,96 +1,185 @@
-#Skill Swap API
+# SkillSwap API
 
-**Skill Swap** is a backend API for a skill swap platform. It is implemented using **FastAPI**, **PostgreSQL**, **JWT** authentication and asynchronous database handling.
+![CI](https://github.com/your-username/skill-swap-api/actions/workflows/ci.yml/badge.svg) ![Docker](https://github.com/your-username/skill-swap-api/actions/workflows/docker.yml/badge.svg)
 
----
+## Table of Contents
 
-##  Features
+* [Project Overview](#project-overview)
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Prerequisites](#prerequisites)
+* [Getting Started (Local)](#getting-started-local)
 
-- **Registration and authorization of users**
-- **JWT authentication** with endpoint protection
-- **Asynchronous work with PostgreSQL** via SQLAlchemy (Async ORM)
-- **Password hashing** using bcrypt (Passlib)
-- **Data Validation** using Pydantic
-- **Separation of business logic and routes**
-- **Ready to containerize with Docker** (planned)
-- **Expandable and clean code**, ready to scale
+  * [Clone Repository](#clone-repository)
+  * [Environment Variables](#environment-variables)
+  * [Install Dependencies](#install-dependencies)
+  * [Database Setup](#database-setup)
+  * [Run Application](#run-application)
+* [Docker Setup](#docker-setup)
+* [Running Tests](#running-tests)
+* [Project Structure](#project-structure)
+* [API Documentation](#api-documentation)
+* [Contributing](#contributing)
+* [License](#license)
 
----
+## Project Overview
 
-## Technology Stack
+SkillSwap API is an asynchronous Python backend service built with FastAPI designed to facilitate a skill-sharing platform. Users can register, authenticate with JWT, and manage (create, read, delete) their skills. The project follows modern best practices, including a service layer, Alembic migrations, Docker containerization, and automated testing.
 
-- Python 3.11+
-- FastAPI
-- SQLAlchemy (async)
-- PostgreSQL
-- Passlib (bcrypt)
-- Pydantic
-- Uvicorn
-- Alembic (planned)
-- Docker (planned)
+## Features
 
----
+* User registration and JWT-based authentication
+* Secure password hashing with bcrypt
+* CRUD operations for `Skill` resource
+* Pydantic model validation
+* Asynchronous database interactions with SQLAlchemy and PostgreSQL
+* Versioned schema migrations using Alembic
+* Docker and docker-compose support for easy deployment
+* Pytest-based async tests with in-memory SQLite
+* Structured logging and centralized exception handling
 
-## 📁 Project structure
-![image](https://github.com/user-attachments/assets/de93c874-1f86-45cc-aeec-f2efb1a1152b)
+## Tech Stack
 
+* **Framework**: FastAPI
+* **Language**: Python 3.12
+* **Database**: PostgreSQL (async via asyncpg)
+* **ORM**: SQLAlchemy (async)
+* **Migrations**: Alembic
+* **Config**: Pydantic Settings
+* **Testing**: Pytest, pytest-asyncio, httpx
+* **Containerization**: Docker, docker-compose
+* **Security**: JWT, bcrypt (via Passlib)
 
----
+## Prerequisites
 
-## Installing and deployment
+* Python 3.12+
+* PostgreSQL 15+
+* Docker & docker-compose (for containerized setup)
 
-### 1. Clone repository:
-git clone https://github.com/<your-username>/skill-swap-api.git
+## Getting Started (Local)
+
+### Clone Repository
+
+```bash
+git clone https://github.com/your-username/skill-swap-api.git
 cd skill-swap-api
+```
 
-### 2. Create venv
+### Environment Variables
+
+Copy the example file and update the variables:
+
+```bash
+cp .env.example .env
+# Edit .env and set DATABASE_URL and SECRET_KEY
+```
+
+```dotenv
+DATABASE_URL=postgresql+asyncpg://postgres:password@localhost/skill_swap_db
+SECRET_KEY=your_jwt_secret
+```
+
+### Install Dependencies
+
+```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-### 3. Install dependencies:
+source .venv/bin/activate  # on Linux/macOS
+.\.venv\Scripts\activate   # on Windows PowerShell
 pip install -r requirements.txt
+```
 
-### 4. Add .env file:
-DATABASE_URL=postgresql+asyncpg://postgres:yourpassword@localhost/skill_swap_db
-SECRET_KEY=your-secret-key
+### Database Setup
 
-### 5. Launch server:
+1. Ensure PostgreSQL is running.
+2. Create the database:
+
+   ```bash
+   psql -U postgres -c "CREATE DATABASE skill_swap_db;"
+   ```
+3. Run Alembic migrations:
+
+   ```bash
+   alembic upgrade head
+   ```
+
+### Run Application
+
+```bash
 uvicorn app.main:app --reload
+```
 
+Visit [http://localhost:8000/docs](http://localhost:8000/docs) to explore the API documentation.
 
----
+## Docker Setup
 
+Build and start services via docker-compose:
 
-Usage instance:
-# Registration
-curl -X POST http://localhost:8000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com", "password":"securepass"}'
+```bash
+docker-compose up --build -d
+```
 
-# Logining
-curl -X POST http://localhost:8000/auth/login \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=user@example.com&password=securepass"
+* **db**: PostgreSQL service on port 5432
+* **web**: FastAPI service on port 8000
 
-# Getting current user
-curl -X GET http://localhost:8000/auth/me \
-  -H "Authorization: Bearer <access_token>"
+To stop and remove containers:
 
+```bash
+docker-compose down
+```
 
----
+## Running Tests
 
-Swagger UI (/docs) may not handle tokens correctly. It is recommended to use curl or Postman for testing.
+Install dev dependencies:
 
-Pydantic validators provide reliable input validation.
+```bash
+pip install -r requirements-dev.txt
+```
 
-Upcoming plans:
+Run pytest:
 
-Docker containerization
-Alembic migrations
-Swagger UI fixes
+```bash
+pytest -q
+```
 
+## Project Structure
 
+```
+├── app/
+│   ├── api/            # Route definitions
+│   ├── core/           # Config and security
+│   ├── db/             # Database, migrations
+│   ├── models/         # SQLAlchemy models
+│   ├── schemas/        # Pydantic schemas
+│   ├── services/       # Business logic layer
+│   └── main.py         # FastAPI application
+├── migrations/         # Alembic migration configs
+├── tests/              # Pytest test cases
+├── Dockerfile          # Multi-stage build image
+├── docker-compose.yml  # Local dev orchestration
+├── pytest.ini          # Pytest config
+├── requirements.txt    # Production dependencies
+├── requirements-dev.txt# Dev dependencies
+└── README.md           # Project documentation
+```
 
+## API Documentation
 
+Interactive Swagger UI available at `/docs` (default):
 
+* **Auth**: `/auth/register`, `/auth/login`, `/auth/me`
+* **Skills**: `/skills` (GET), `/skills/{id}` (GET), `/skills` (POST), `/skills/{id}` (DELETE)
 
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repo
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
+
+Ensure tests pass and follow code style (Black, Flake8, isort).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
