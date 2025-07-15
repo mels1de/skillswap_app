@@ -22,6 +22,11 @@
 
 ## Project Overview
 
+
+<img width="415" height="931" alt="Снимок экрана 2025-07-15 194728" src="https://github.com/user-attachments/assets/21979c06-d72a-4ff6-9c87-f428a30ae379" />
+<img width="1919" height="1079" alt="Снимок экрана 2025-07-15 194628" src="https://github.com/user-attachments/assets/be1862a5-0ff4-4b6f-ada7-e4bc5503bff1" />
+<img width="486" height="440" alt="Снимок экрана 2025-07-15 194642" src="https://github.com/user-attachments/assets/4c2b0391-a933-4e83-b9e2-e85399fa889e" />
+
 SkillSwap API is an asynchronous Python backend service built with FastAPI designed to facilitate a skill-sharing platform. Users can register, authenticate with JWT, and manage (create, read, delete) their skills. The project follows modern best practices, including a service layer, Alembic migrations, Docker containerization, and automated testing.
 
 ## Features
