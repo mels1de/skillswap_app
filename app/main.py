@@ -4,6 +4,9 @@ from app.api.skills import router as skills_router
 
 from app.api import auth
 from app.core.config import settings
+from app.core.events import register_lifespan
+
+
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -14,6 +17,9 @@ def create_app() -> FastAPI:
         redoc_url=None,
         debug=True
     )
+
+    register_lifespan(app)
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_origins,
@@ -25,5 +31,6 @@ def create_app() -> FastAPI:
     app.include_router(auth.router, prefix="/auth", tags=["auth"])
     app.include_router(skills_router)
     return app
+
 
 app = create_app()

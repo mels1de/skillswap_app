@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     app_title:str = "SkillSwap API"
     app_version:str = "1.0.0"
     allowed_origins: List[str] = Field(default_factory=lambda: ["*"])
+    REDIS_URL: str
+    RABBITMQ_URL: str
 
     database_url: AnyUrl
     secret_key: str
