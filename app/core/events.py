@@ -1,14 +1,18 @@
+# app/core/events.py
 from fastapi import FastAPI
-from app.services.redis_client import connect_redis,close_redis
-from app.services.mq import connect_mq, close_mq
+from typing import Callable, Sequence, Awaitable
 
-def register_lifespan(app: FastAPI):
+def register_lifespan(
+    app: FastAPI,
+    startups: Sequence[Callable[[], Awaitable[None]]],
+    shutdowns: Sequence[Callable[[], Awaitable[None]]],
+) -> None:
     @app.on_event("startup")
-    async def startup():
-        await connect_redis()
-        await connect_mq()
+    async def _startup_event():
+        for fn in startups:
+            await fn()
 
     @app.on_event("shutdown")
-    async def shutdown():
-        await close_mq()
-        await close_redis()
+    async def _shutdown_event():
+        for fn in shutdowns:
+            await fn()

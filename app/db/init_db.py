@@ -1,5 +1,6 @@
 import asyncio
-from app.db.database import engine, Base
+from app.db.database import engine
+from app.db.base import Base
 from app.models.user import User
 from app.models.skill import Skill
 

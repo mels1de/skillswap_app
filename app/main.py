@@ -5,8 +5,8 @@ from app.api.skills import router as skills_router
 from app.api import auth
 from app.core.config import settings
 from app.core.events import register_lifespan
-
-
+from app.services.redis_client import connect_redis, close_redis
+from app.services.mq import connect_mq, close_mq
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -18,7 +18,11 @@ def create_app() -> FastAPI:
         debug=True
     )
 
-    register_lifespan(app)
+    register_lifespan(
+        app,
+        startups=[connect_redis, connect_mq],
+        shutdowns=[close_redis, close_mq],
+    )
 
     app.add_middleware(
         CORSMiddleware,

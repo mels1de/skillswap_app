@@ -2,15 +2,15 @@ FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-COPY requierments.txt /app/requierments.txt
-RUN pip install --no-cache-dir -r requierments.txt
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
 FROM python:3.12-slim
 WORKDIR /app
 
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local /usr/local
 COPY --from=builder /app /app
 
 RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup

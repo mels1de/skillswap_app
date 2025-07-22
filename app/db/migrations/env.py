@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.join(sys.path[0], "..", "..")))
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url",str(settings.database_url))
+config.set_main_option("sqlalchemy.url",str(settings.DATABASE_URL))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -68,7 +68,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    async_url = str(settings.database_url)
+    async_url = str(settings.DATABASE_URL)
     sync_url = async_url.replace("+asyncpg","+psycopg2")
     connectable = create_engine(
         sync_url,
